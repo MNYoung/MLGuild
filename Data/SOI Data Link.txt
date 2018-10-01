@@ -1,3 +1,5 @@
 IRS Statistics of Income Data for 2012-2015 by zipcode can be found here:
 
 https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-statistics-zip-code-data-soi
+
+For each year, the (all States, includes AGI) .csv file was used

@@ -375,8 +375,8 @@ X1.head()
 X_norm
 X1.shape
 X_norm.shape
-X_norm.head()
 X_norm = pd.DataFrame(X_norm,columns=X1.columns)
+X_norm.head()
 
 #instantiate random forest without highly-correlated features
 X1_train, X1_test, y_train, y_test = train_test_split(X1, y,test_size = 0.3, random_state=52)
@@ -543,11 +543,14 @@ df_merged.columns
 plt.scatter(df_merged['agi_stub'],df_merged['college'])
 df_merged['college'].head()
 
+#create higher ed field
+df_merged['higher_ed'] = df_merged['college'] + df_merged['grad']
+
 import seaborn as sns
 
 sns.boxplot(x='agi_stub',y='college',data=df_merged)
 sns.violinplot(x='agi_stub',y='college',data=df_merged)
-df_merged['higher_ed'] = df_merged['college'] + df_merged['grad']
+
 sns.violinplot(x='agi_stub',y='higher_ed',data=df_merged)
 
 sns.boxplot(x='agi_stub',y='higher_ed',data=df_merged)
@@ -704,7 +707,7 @@ df_years = df2014.append(data)
 df_years = df_years.append(df2013)
 df_years = df2012.append(df_years)
 df_years.head()
-
+df_years.columns
 #drop columns for which we do not have data in 2012
 df_years.drop(columns_to_drop,axis=1,inplace=True)
 df_years.columns.difference(df2012.columns)
@@ -854,4 +857,184 @@ plt.ylabel('Thousands of Dollars')
 plt.xticks(np.arange(2012,2016,1))
 plt.show()
 
+#Read in 2006-2011 data
+df2006 = pd.read_csv('2006_zip.csv')
+df2007 = pd.read_csv('2007_zip.csv')
+df2008 = pd.read_csv('2008_zip.csv')
+df2009 = pd.read_csv('2009_zip.csv')
+df2010 = pd.read_csv('2010_zip.csv')
+df2011 = pd.read_csv('2011_zip.csv')
 
+#check shape of the data
+df2006.shape
+df2007.shape
+df2008.shape
+df2009.shape
+df2010.shape
+df2011.shape
+
+#check columns of the data
+df2012.columns
+df2011.columns
+df2010.columns
+df2009.columns
+
+#rename zipcode column for 2011
+df2011 = df2011.rename(columns={'ZIPCODE': 'zipcode'})
+
+#check if the data contains the Residential Energy Credit field
+df2009.N07260.head()
+df2008.NO7260.head()
+
+#create new columns with the year of the data
+df2011['year'] = 2011
+df2010['year'] = 2010
+df2009['year'] = 2009
+
+#find columns present in 2015 that are not present in 2009
+columns_to_drop1 = df_years.columns.difference(df2009.columns)
+
+#append data
+df_years1 = df2011.append(df_years)
+df_years1 = df_years1.append(df2010)
+df_years1 = df_years1.append(df2009)
+df_years1.head()
+df_years1.columns
+
+#drop columns for which we do not have data in 2012
+df_years1.drop(columns_to_drop1,axis=1,inplace=True)
+
+#create new data frame grouped by year
+year1 = df_years1.groupby([(df_years1.year)]).sum()
+
+#EIC Graphs
+plt.plot(year1.index,year1.N59660)
+plt.title('Returns with Earned Income Credit')
+plt.xlabel('Year')
+plt.ylabel('Number of Returns')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,year1.A59660)
+plt.title('Total Earned Income Credit Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,(year1.A59660/year1.N59660))
+plt.title('Average Earned Income Credit Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+#Child Tax Credit Graphs
+plt.plot(year1.index,year1.N07220)
+plt.title('Returns with Child Tax Credits')
+plt.xlabel('Year')
+plt.ylabel('Number of Returns')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,year1.A07220)
+plt.title('Total Child Tax Credits Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,(year1.A07220/year1.N07220))
+plt.title('Average Child Tax Credits Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+#Additional child tax credit graphs
+plt.plot(year1.index,year1.N11070)
+plt.title('Returns with Additional Child Tax Credits')
+plt.xlabel('Year')
+plt.ylabel('Number of Returns')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,year1.A11070)
+plt.title('Total Additional Child Tax Credits Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,(year1.A11070/year1.N11070))
+plt.title('Average Additional Child Tax Credits Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+#Residential Energy Credit Graphs
+plt.plot(year1.index,year1.N07260)
+plt.title('Returns with Residential Energy Credit')
+plt.xlabel('Year')
+plt.ylabel('Number of Returns')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,year1.A07260)
+plt.title('Total Residential Energy Credit Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,(year1.A07260/year1.N07260))
+plt.title('Average Residential Energy Credit Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+#Child & Dependent Care Credit Graphs
+plt.plot(year1.index,year1.N07180)
+plt.title('Returns with Child & Dependent Care Credit')
+plt.xlabel('Year')
+plt.ylabel('Number of Returns')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,year1.A07180)
+plt.title('Total Child & Dependent Care Credit Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,(year1.A07180/year1.N07180))
+plt.title('Average Child & Dependent Care Credit Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+#Total Tax Credit Graphs
+plt.plot(year1.index,year1.N07100)
+plt.title('Returns with Total Tax Credit')
+plt.xlabel('Year')
+plt.ylabel('Number of Returns')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,year1.A07100)
+plt.title('Total Tax Credit Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
+
+plt.plot(year1.index,(year1.A07100/year1.N07100))
+plt.title('Average Tax Credit Amount')
+plt.xlabel('Year')
+plt.ylabel('Thousands of Dollars')
+plt.xticks(np.arange(2009,2016,1))
+plt.show()
