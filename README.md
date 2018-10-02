@@ -9,3 +9,5 @@ https://factfinder.census.gov/faces/nav/jsf/pages/index.xhtml
 
 The data also includes IRS Statistics of Income (SOI) data from 2012-2105, which can be found here:
 https://www.irs.gov/statistics/soi-tax-stats-individual-income-tax-statistics-zip-code-data-soi
+
+For each year, the (all States, includes AGI) .csv file was used
